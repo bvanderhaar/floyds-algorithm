@@ -1,27 +1,54 @@
-// C Program for Floyd Warshall Algorithm
+#include <sstream>
+#include <fstream>
 #include <stdio.h>
+#include <iostream>
+#include <string>
+#include <thread>
+#include <vector>
 
-// Number of vertices in the graph
-#define V 4
-
-/* Define Infinite as a large enough value. This value will be used
-  for vertices not connected to each other */
 #define INF 99999
 
-// A function to print the solution matrix
-void printSolution(int dist[][V]);
+std::vector<int> slurp(const std::string &filename) {
+  std::vector<int> vect;
+  int i;
+  std::ifstream in(filename, std::ifstream::in);
+  std::stringstream sstr;
+  sstr << in.rdbuf();
+  while (sstr >> i) {
+    std::cout << "read i: " << i << std::endl;
+    vect.push_back(i);
+    if (sstr.peek() == '\t' || sstr.peek() == ' ') {
+      sstr.ignore();
+      }
+  }
+  return vect;
+}
 
-// Solves the all-pairs shortest path problem using Floyd Warshall algorithm
-void floydWarshell(int graph[][V]) {
+int main(int argc, char *argv[]) {
+  int i, j, k=0;
+  if (argc != 2) {
+    std::cout << "Usage: floyds-algorithm num_vertices" << std::endl;
+  }
+  std::vector<int> flat_array = slurp("matrix.out");
+  int vertices = atoi(argv[1]);
+  int graph[vertices][vertices];
+  for (i = 0; i < vertices; i++) {
+    for (j = 0; j < vertices; j++) {
+      std::cout << "i: " << i << " j: " << j << " value: " << flat_array[k] << std::endl;
+      graph[i][j] = flat_array[k];
+      k++;
+    }
+  }
+
   /* dist[][] will be the output matrix that will finally have the shortest
     distances between every pair of vertices */
-  int dist[V][V], i, j, k;
+  int dist[vertices][vertices];
 
   /* Initialize the solution matrix same as input graph matrix. Or
      we can say the initial values of shortest distances are based
      on shortest paths considering no intermediate vertex. */
-  for (i = 0; i < V; i++)
-    for (j = 0; j < V; j++)
+  for (i = 0; i < vertices; i++)
+    for (j = 0; j < vertices; j++)
       dist[i][j] = graph[i][j];
 
   /* Add all vertices one by one to the set of intermediate vertices.
@@ -30,12 +57,12 @@ void floydWarshell(int graph[][V]) {
     vertices in set {0, 1, 2, .. k-1} as intermediate vertices.
     ----> After the end of a iteration, vertex no. k is added to the set of
     intermediate vertices and the set becomes {0, 1, 2, .. k} */
-  for (k = 0; k < V; k++) {
+  for (k = 0; k < vertices; k++) {
     // Pick all vertices as source one by one
-    for (i = 0; i < V; i++) {
+    for (i = 0; i < vertices; i++) {
       // Pick all vertices as destination for the
       // above picked source
-      for (j = 0; j < V; j++) {
+      for (j = 0; j < vertices; j++) {
         // If vertex k is on the shortest path from
         // i to j, then update the value of dist[i][j]
         if (dist[i][k] + dist[k][j] < dist[i][j])
@@ -43,8 +70,4 @@ void floydWarshell(int graph[][V]) {
       }
     }
   }
-
-  // Print the shortest distance matrix
 }
-
-int main(int argc, char *argv[]) {}
