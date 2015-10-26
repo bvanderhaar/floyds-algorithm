@@ -5,6 +5,7 @@
 #include <string>
 #include <thread>
 #include <vector>
+#include <omp.h>
 
 #define INF 99999
 
