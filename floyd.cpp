@@ -56,8 +56,9 @@ calc_distance(std::vector<std::vector<int>> distance_matrix, int vertices) {
     }
   }
 
-  //std::cout << "normalized array: \n" << std::endl;
-  //print_2d_array(solution, vertices);
+  // std::cout << "normalized array: \n" << std::endl;
+  // print_2d_array(solution, vertices);
+  #pragma omp parallel for collapse(3)
   for (k = 0; k < vertices; k++) {
     for (i = 0; i < vertices; i++) {
       for (j = 0; j < vertices; j++) {
@@ -100,9 +101,13 @@ int main(int argc, char *argv[]) {
     vertices = 4;
     graph = test_graph();
   }
-
+  clock_t begin_matrix_calc = clock();
   std::vector<std::vector<int>> solution = calc_distance(graph, vertices);
-  std::cout << "solution array: " << std::endl;
-  print_2d_array(solution, vertices);
+  clock_t end_matrix_calc = clock();
+  double elapsed_msecs_matrix_calc =
+      double(end_matrix_calc - begin_matrix_calc) / (CLOCKS_PER_SEC / 1000);
+  // std::cout << "solution array: " << std::endl;
+  // print_2d_array(solution, vertices);
+  std::cout << "Time taken: " << elapsed_msecs_matrix_calc << std::endl;
   return 0;
 }
