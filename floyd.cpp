@@ -117,7 +117,7 @@ int main(int argc, char *argv[]) {
   clock_t end_matrix_calc = clock();
   double elapsed_msecs_matrix_calc =
       double(end_matrix_calc - begin_matrix_calc) / (CLOCKS_PER_SEC / 1000);
-  std::cout << "Graph process time (serial): " << elapsed_msecs_matrix_calc
+  std::cout << "Graph process time (serial): " << elapsed_graph_process
             << std::endl;
   // std::cout << "solution array: " << std::endl;
   // print_2d_array(solution, vertices);
